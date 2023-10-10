@@ -1,0 +1,24 @@
+{
+    "name": "kubinyete/adiq-edi-php",
+    "description": "Unofficial library for reading EDI files provided by Adiq.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Kubinyete\\Edi\\Adiq\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vitor Kubinyete",
+            "email": "vitorkubinyete@hotmail.com"
+        }
+    ],
+    "require": {
+        "kubinyete/edi-php": "^1.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^6.3",
+        "phpunit/phpunit": "^10.4"
+    }
+}
