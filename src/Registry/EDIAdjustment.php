@@ -74,7 +74,7 @@ class EDIAdjustment extends EDIRegistry
     #[Text(11)]
     public string $accountNumber;
 
-    #[Text(19)]
+    #[Text(19, padDirection: STR_PAD_LEFT, padChar: '0')]
     public string $originalTransactionCardNumber;
 
     #[Number(3)]

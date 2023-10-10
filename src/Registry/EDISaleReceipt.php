@@ -61,7 +61,7 @@ class EDISaleReceipt extends EDIRegistry
     #[Numeric(11)]
     public string $saleAmount;
 
-    #[Text(19)]
+    #[Text(19, padDirection: STR_PAD_LEFT, padChar: '0')]
     public string $cardNumber;
 
     #[Number(2)]

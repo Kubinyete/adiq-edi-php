@@ -20,6 +20,18 @@ use Kubinyete\Edi\Adiq\Registry\EDITransactionBatchEnd;
 
 class EDIParser extends LineParser
 {
+    private const VERSION_SUPPORT = ['3.1'];
+
+    public function getVersionSupport(): array
+    {
+        return self::VERSION_SUPPORT;
+    }
+
+    public function isVersionSupported(string $version): bool
+    {
+        return in_array($version, $this->getVersionSupport(), true);
+    }
+
     protected function __construct(StreamInterface $stream)
     {
         parent::__construct($stream);
