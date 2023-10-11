@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "kubinyete/edi-php",
-            "version": "1.0.0",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Kubinyete/edi-php.git",
-                "reference": "53a29e83b795e327b42d7dcc9a8902713c3561fb"
+                "reference": "4d71fcc9f5c3045da249520c3981fa54670e96fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Kubinyete/edi-php/zipball/53a29e83b795e327b42d7dcc9a8902713c3561fb",
-                "reference": "53a29e83b795e327b42d7dcc9a8902713c3561fb",
+                "url": "https://api.github.com/repos/Kubinyete/edi-php/zipball/4d71fcc9f5c3045da249520c3981fa54670e96fa",
+                "reference": "4d71fcc9f5c3045da249520c3981fa54670e96fa",
                 "shasum": ""
             },
             "require-dev": {
@@ -43,9 +43,9 @@
             "description": "A standard library for reading EDI files and declaring your own EDI parsers",
             "support": {
                 "issues": "https://github.com/Kubinyete/edi-php/issues",
-                "source": "https://github.com/Kubinyete/edi-php/tree/1.0.0"
+                "source": "https://github.com/Kubinyete/edi-php/tree/1.0.2"
             },
-            "time": "2023-10-10T17:56:05+00:00"
+            "time": "2023-10-11T13:31:50+00:00"
         }
     ],
     "packages-dev": [
