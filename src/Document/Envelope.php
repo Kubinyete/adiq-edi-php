@@ -24,14 +24,14 @@ class Envelope
         $this->registryTotalCreditAmount = $tail->registryTotalCreditAmount;
     }
 
-    public function entries(): iterable
+    public function getEntries(): iterable
     {
         return $this->document->eachEnvelopeItem($this);
     }
 
     public function each(Closure $closure): void
     {
-        foreach ($this->entries() as $entry) {
+        foreach ($this->getEntries() as $entry) {
             $closure->__invoke($entry);
         }
     }

@@ -23,6 +23,7 @@ class Document
     public function __construct(private StreamInterface $stream, bool $autoload = true)
     {
         $this->parser = EDIParser::loadFromStream($stream);
+        $this->metadata = null;
 
         if ($autoload) {
             $this->load();
@@ -31,55 +32,55 @@ class Document
 
     public function load(): void
     {
-        $header = $this->eat(EDIHeader::class);
+        $header = $this->eatUntilRegistry(EDIHeader::class);
         $this->changeParserVersion($header);
-        $this->loadBody($header);
+        $this->loadMetadata($header);
     }
 
-    public function envelopes(): iterable
+    public function getMetadata(): DocumentMetadata
+    {
+        return $this->metadata;
+    }
+
+    public function getEnvelopes(): iterable
     {
         return $this->envelopes;
     }
 
     public function eachEnvelopeItem(Envelope $envelope): iterable
     {
-        $this->parser->rollback();
-        $registry = null;
-
-        do {
-            $registry = $this->parser->next();
-        } while ($registry && $this->parser->getLineNumber() < $envelope->lineStart);
-
-        if ($this->parser->getLineNumber() >= $envelope->lineStart) {
-            while ($registry && $this->parser->getLineNumber() < $envelope->lineEnd - 1) {
-                $registry = $this->parser->next();
-                yield $registry;
-            }
-        }
+        $this->parser->goto($envelope->lineStart);
+        yield from $this->eatRejectedUntilLine($envelope->lineEnd);
     }
 
     //
 
-    private function loadBody(EDIHeader $header): void
+    private function loadMetadata(EDIHeader $header): void
     {
         while ($head = $this->parser->next()) {
             if ($head instanceof EDITransactionBatch) {
-                $lineStart = $this->parser->getLineNumber();
-                $tail = $this->eat(EDITransactionBatchEnd::class);
-                $lineEnd = $this->parser->getLineNumber();
-
-                $this->envelopes[] = new Envelope($head, $tail, $lineStart, $lineEnd, $this);
-            } else if ($head instanceof EDIHeaderEnd) {
-                $this->metadata = new DocumentMetadata($header, $head);
+                $this->loadEnvelopes($head);
+            } else {
+                break;
             }
         }
 
-        if (!$this->metadata) {
-            throw new RuntimeException("Expected ending registry, found EOF");
+        if (!$head instanceof EDIHeaderEnd) {
+            throw new RuntimeException("Expected ending registry, found EOF or unknown registry type");
         }
+
+        $this->metadata = new DocumentMetadata($header, $head);
     }
 
-    private function eat(string $registryClass, ?Closure $reject = null): ?EDIRegistry
+    private function loadEnvelopes(EDITransactionBatch $head): void
+    {
+        $lineStart = $this->parser->getLineNumber();
+        $tail = $this->eatUntilRegistry(EDITransactionBatchEnd::class);
+        $lineEnd = $this->parser->getLineNumber();
+        $this->envelopes[] = new Envelope($head, $tail, $lineStart, $lineEnd, $this);
+    }
+
+    private function eatUntilRegistry(string $registryClass, ?Closure $reject = null): ?EDIRegistry
     {
         $registry = null;
 
@@ -89,6 +90,28 @@ class Document
         } while ($registry && !$registry instanceof $registryClass);
 
         return $registry;
+    }
+
+    private function eatUntilLine(int $lineNo, ?Closure $reject = null): ?EDIRegistry
+    {
+        $registry = null;
+
+        do {
+            if ($registry && $reject) $reject($registry);
+            $registry = $this->parser->next();
+        } while ($registry && $this->parser->getLineNumber() < $lineNo);
+
+        return $registry;
+    }
+
+    private function eatRejectedUntilLine(int $lineNo): iterable
+    {
+        $registry = null;
+
+        do {
+            if ($registry) yield $registry;
+            $registry = $this->parser->next();
+        } while ($registry && $this->parser->getLineNumber() < $lineNo);
     }
 
     private function changeParserVersion(EDIHeader $header): void
@@ -110,5 +133,10 @@ class Document
     public static function open(string $path): self
     {
         return new self(Stream::file($path, 'rb'));
+    }
+
+    public static function stream(StreamInterface $stream): self
+    {
+        return new self($stream);
     }
 }
