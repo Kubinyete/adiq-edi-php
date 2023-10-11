@@ -26,7 +26,7 @@ class Envelope
 
     public function getEntries(): iterable
     {
-        return $this->document->eachEnvelopeItem($this);
+        yield from $this->document->eachItemFromLine($this->lineStart, $this->lineEnd);
     }
 
     public function each(Closure $closure): void

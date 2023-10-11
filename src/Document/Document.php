@@ -47,10 +47,10 @@ class Document
         return $this->envelopes;
     }
 
-    public function eachEnvelopeItem(Envelope $envelope): iterable
+    public function eachItemFromLine(int $line, int $to = 0): iterable
     {
-        $this->parser->goto($envelope->lineStart);
-        yield from $this->eatRejectedUntilLine($envelope->lineEnd);
+        $this->parser->goto($line);
+        yield from $this->eatRejectedUntilLine($to);
     }
 
     //
@@ -99,7 +99,7 @@ class Document
         do {
             if ($registry && $reject) $reject($registry);
             $registry = $this->parser->next();
-        } while ($registry && $this->parser->getLineNumber() < $lineNo);
+        } while ($registry && ($lineNo == 0 || $this->parser->getLineNumber() < $lineNo));
 
         return $registry;
     }
@@ -111,7 +111,7 @@ class Document
         do {
             if ($registry) yield $registry;
             $registry = $this->parser->next();
-        } while ($registry && $this->parser->getLineNumber() < $lineNo);
+        } while ($registry && ($lineNo == 0 || $this->parser->getLineNumber() < $lineNo));
     }
 
     private function changeParserVersion(EDIHeader $header): void
