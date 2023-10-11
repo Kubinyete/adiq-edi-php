@@ -1,5 +1,13 @@
-# Adiq EDI PHP
-A standard library for loading EDI files from Adiq.
+
+# <img align="middle" src="https://www.adiq.com.br/static/logo-6c8a8337b1a1e6b71cd64a73f0da2f85.png" width="128"> **EDI** for PHP
+
+**pt-BR**: Uma biblioteca simples e direta para carregar arquivos EDI da adquirente [Adiq Pagamentos](https://www.adiq.com.br/)
+
+**en-US**: A straightfoward library for loading EDI files from [Adiq Pagamentos](https://www.adiq.com.br/)
+
+***NOTA**: Este guia está primariamente em inglês, caso haja necessidade, será adicionado uma versão em pt-BR no futuro.*
+
+---
 
 ### Usage
 You can just instantiate a new document object from a data stream, after that, you should be able to directly
