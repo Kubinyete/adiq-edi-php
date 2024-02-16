@@ -9,15 +9,20 @@
 
 ---
 
+### Installation
+
+Let's start by requiring the package by running the following command
+```sh
+composer require kubinyete/adiq-edi-php
+```
+
 ### Usage
 You can just instantiate a new document object from a data stream, after that, you should be able to directly
 check each envelope that is present on file, and iterate over each entry accordingly.
 
 ```php
-$path = __DIR__ . DIRECTORY_SEPARATOR . 'EDI_020_20231001_11111_0011_001111111_000111.txt';
-
-$document = Document::open($path);
-
+// Opening the document by providing a file path
+$document = Document::open(__DIR__ . DIRECTORY_SEPARATOR . 'EDI_020_20231001_11111_0011_001111111_000111.txt');
 // Metadata information can be found via
 $metadata = $document->getMetadata();
 
@@ -32,7 +37,6 @@ dump([
 // For each envelope available
 foreach ($document->getEnvelopes() as $envelope) {
     /** @var Envelope $envelope */
-
     dump([
         'envelopeDate' => $envelope->date,
         'envelopeCurrencyCode' => $envelope->currencyCode,
