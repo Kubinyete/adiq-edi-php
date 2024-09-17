@@ -1,5 +1,5 @@
 
-# <img align="middle" src="https://www.adiq.com.br/static/logo-6c8a8337b1a1e6b71cd64a73f0da2f85.png" width="128"> **EDI** for PHP
+# <img align="middle" src="https://www.adiq.com.br/images/logo.png" width="128"> **EDI** for PHP
 
 **pt-BR**: Uma biblioteca simples e direta para carregar arquivos EDI da adquirente [Adiq Pagamentos](https://www.adiq.com.br/)
 
